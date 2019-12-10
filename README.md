@@ -20,10 +20,13 @@ Run Release
 
 ## Controls
 
+To Change between placing alive and dead cells use `1` and `2` keys:
 * R -> Random spawning,
 * S -> Start and Stop,
 * C -> Clear Screen,
 * Left Click -> Place Cells,
+* 1 -> Alive Cell,
+* 2 -> Dead Cell,
 * Up -> Speed Up,
 * Down -> Speed Down,
 * ESC -> Exit
