@@ -1,5 +1,23 @@
 # Game Of Life
 
+## To Run
+
+Clone from github.
+
+`git clone https://github.com/cowboy8625/GameOfLife.git`
+
+Change Folders
+
+`cd GameOfLife`
+
+Compile to release
+
+`cargo build --release`
+
+Run Release
+
+`cargo run --release`
+
 ## Controls
 
 * R -> Random spawning,
