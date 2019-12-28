@@ -61,10 +61,6 @@ fn main() -> Result<(), String> {
                 }
                 Event::KeyDown { keycode: Some(Keycode::Right), .. } => {
                     if grid != MAX {
-                        if grid == MIN {
-                            x = 0;
-                            y = 0;
-                        }
                         grid -= STEP;
                         width = WIDTH / grid;
                         height = HEIGHT / grid;
@@ -108,6 +104,7 @@ fn main() -> Result<(), String> {
             }
         }
 
+        let (x, y) = can_fit(x, y, width, height);
         let screen = get_screen(x, y, width, height, &cells);
         display_board(&mut canvas, &screen, grid)?;
         if mouse.left() {
@@ -163,40 +160,40 @@ fn screen_to_world_cords(x: usize, y: usize, sx: usize, sy: usize) -> (usize, us
     (x, y)
 }
 
-fn life_gen() -> Vec<Vec<bool>> {
-    let mut v:Vec<Vec<bool>> = Vec::new();
+fn can_fit(mut x: i32, mut y: i32, width: i32, height: i32) -> (i32, i32) {
+    x = if x + width > WIDTH / GRID { WIDTH / GRID - width } else { x };
+    y = if y + height > HEIGHT / GRID { HEIGHT / GRID - height } else { y };
+    (x, y)
+}
 
-    for y in  0..(HEIGHT / GRID) {
-        v.push(Vec::new());
-        for _x in  0..(WIDTH / GRID) {
-            v[y as usize].push(rand::random());
-        }
-    }
-    v
+fn life_gen() -> Vec<Vec<bool>> {
+    (0..HEIGHT / GRID)
+    .map(|_|
+        (0..WIDTH / GRID)
+            .map(|_|rand::random())
+            .collect::<Vec<bool>>()
+    )
+    .collect::<Vec<_>>()
 }
 
 fn clear() -> Vec<Vec<bool>> {
-    let mut v: Vec<Vec<bool>> = Vec::new();
-
-    for y in 0..(HEIGHT / GRID) {
-        v.push(Vec::new());
-        for _x in 0..(WIDTH / GRID) {
-            v[y as usize].push(false);
-        }
-    }
-    v
+    (0..HEIGHT / GRID)
+    .map(|_|
+        (0..WIDTH / GRID)
+            .map(|_|false)
+            .collect::<Vec<bool>>()
+    )
+    .collect::<Vec<_>>()
 }
 
 fn next_genoration(v: Vec<Vec<bool>>) -> Vec<Vec<bool>> {
-    let mut v2:Vec<Vec<bool>> = Vec::new();
-    
-    for y in 0..HEIGHT / GRID {
-            v2.push(Vec::new());
-        for x in 0..WIDTH / GRID{
-            v2[y as usize].push(alive(x as i32,  y as i32, &v)); 
-            }
-        }
-    v2
+    (0..HEIGHT / GRID)
+    .map(|y|
+        (0..WIDTH / GRID)
+            .map(|x|alive(x as i32, y as i32, &v))
+            .collect::<Vec<bool>>()
+    )
+    .collect::<Vec<_>>()
 }
 
 fn alive(x: i32, y: i32, v: &Vec<Vec<bool>>) -> bool {
@@ -215,26 +212,30 @@ fn alive(x: i32, y: i32, v: &Vec<Vec<bool>>) -> bool {
     }
 }
 
-fn inc(n: usize) ->  usize {
+fn inc_x(n: usize) ->  usize {
     (n + 1) % (WIDTH / GRID) as usize
 }
 
-fn dec(n: usize) -> usize {
-    if n == 0 {
-        ((WIDTH / GRID) - 1) as usize
-    } else {
-        (n - 1) as usize
-    }
+fn dec_x(n: usize) -> usize {
+    if n == 0 { ((WIDTH / GRID) - 1) as usize } else { (n - 1) as usize }
+}
+
+fn inc_y(n: usize) ->  usize {
+    (n + 1) % (HEIGHT / GRID) as usize
+}
+
+fn dec_y(n: usize) -> usize {
+    if n == 0 { ((HEIGHT / GRID) - 1) as usize } else { (n - 1) as usize }
 }
 
 fn cell_count(x: usize, y: usize, v: &Vec<Vec<bool>>) -> i32 {
-    v[dec(y)][x] as i32 +
-    v[inc(y)][x] as i32 +
-    v[y][dec(x)] as i32 +
-    v[y][inc(x)] as i32 +
-    v[dec(y)][dec(x)] as i32 +
-    v[dec(y)][inc(x)] as i32 +
-    v[inc(y)][inc(x)] as i32 +
-    v[inc(y)][dec(x)] as i32
+    v[dec_y(y)][x] as i32 +
+    v[inc_y(y)][x] as i32 +
+    v[y][dec_x(x)] as i32 +
+    v[y][inc_x(x)] as i32 +
+    v[dec_y(y)][dec_x(x)] as i32 +
+    v[dec_y(y)][inc_x(x)] as i32 +
+    v[inc_y(y)][inc_x(x)] as i32 +
+    v[inc_y(y)][dec_x(x)] as i32
 }
 
