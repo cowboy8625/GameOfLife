@@ -8,7 +8,7 @@ use sdl2::keyboard::Keycode;
 use std::time::Duration;
 use sdl2::render::Canvas;
 use sdl2::video::Window;
-use sdl2::mouse::{MouseButton, MouseState};
+use sdl2::mouse::MouseState;
  
 const WIDTH: i32 = 900;
 const HEIGHT: i32 = 900;
@@ -39,13 +39,11 @@ fn main() -> Result<(), String> {
     let mut cells = clear();
     let mut speed: u64 = 50;
     let mut block: bool = true;
-    let white: Color = Color::RGB(255, 255, 255);
 
 
     canvas.set_draw_color(Color::RGB(0, 0, 0));
     canvas.clear();
     'running: loop {
-        let screen = get_screen(x, y, width, height, &cells);
         let mouse = MouseState::new(&event_pump);
         for event in event_pump.poll_iter() {
             match event {
@@ -170,7 +168,7 @@ fn life_gen() -> Vec<Vec<bool>> {
 
     for y in  0..(HEIGHT / GRID) {
         v.push(Vec::new());
-        for x in  0..(WIDTH / GRID) {
+        for _x in  0..(WIDTH / GRID) {
             v[y as usize].push(rand::random());
         }
     }
@@ -182,7 +180,7 @@ fn clear() -> Vec<Vec<bool>> {
 
     for y in 0..(HEIGHT / GRID) {
         v.push(Vec::new());
-        for x in 0..(WIDTH / GRID) {
+        for _x in 0..(WIDTH / GRID) {
             v[y as usize].push(false);
         }
     }
