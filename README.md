@@ -10,13 +10,10 @@ Change Folders
 
 `cd GameOfLife`
 
-Compile to release
-
-`cargo build --release`
-
-Run Release
+Compile to release and run.
 
 `cargo run --release`
+
 
 ## Controls
 
