@@ -40,8 +40,8 @@ pub fn key_mapper() -> Mapper {
     map.add_key(Keycode::J, screen_down);
     map.add_key(Keycode::H, screen_left);
     map.add_key(Keycode::L, screen_right);
-    map.add_key(Keycode::Left, zoom_in);
-    map.add_key(Keycode::Right, zoom_out);
+    map.add_key(Keycode::Left, zoom_out);
+    map.add_key(Keycode::Right, zoom_in);
     map.add_key(Keycode::Num1, swap_block);
 
     map
